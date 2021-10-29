@@ -1,9 +1,21 @@
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
-import { useAuth } from '../../contexts/auth';
+import { AUTH_TOKEN } from '../../services/constants';
 
 export function Header() {
-  const { isAuthenticated, logout } = useAuth();
+  const history = useRouter();
+  const [authToken, setAuthToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const AuthToken = localStorage.getItem(AUTH_TOKEN);
+    setAuthToken(AuthToken);
+  }, [authToken]);
+
+  if (authToken !== null && typeof authToken !== 'string') {
+    return null;
+  }
 
   return (
     <div className="flex pa1 justify-between nowrap orange">
@@ -26,7 +38,7 @@ export function Header() {
             Search
           </a>
         </Link>
-        {isAuthenticated && (
+        {authToken && (
           <div className="flex">
             <div className="ml1">|</div>
             <Link
@@ -39,10 +51,13 @@ export function Header() {
         )}
       </div>
       <div className="flex flex-fixed">
-        {isAuthenticated ? (
+        {authToken ? (
           <div
             className="ml1 pointer black"
-            onClick={logout}
+            onClick={() => {
+              localStorage.removeItem(AUTH_TOKEN);
+              history.push(`/`);
+            }}
           >
             logout
           </div>
