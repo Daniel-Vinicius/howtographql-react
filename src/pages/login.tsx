@@ -1,15 +1,15 @@
 import type { NextPage } from 'next'
 
 import { HeadComponent } from '../components/Head'
-import { CreateLink } from '../components/CreateLink'
+import { Login as LoginComponent } from '../components/Login'
 
-const Create: NextPage = () => {
+const Login: NextPage = () => {
   return (
     <>
       <HeadComponent title="Create Link" />
-      <CreateLink />
+      <LoginComponent />
     </>
   )
 }
 
-export default Create
+export default Login

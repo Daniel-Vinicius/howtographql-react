@@ -21,7 +21,7 @@ const defaultFormState = {
   url: ''
 };
 
-export function CreateLink () {
+export function CreateLink() {
   const router = useRouter();
   const [formState, setFormState] = useState(defaultFormState);
 
