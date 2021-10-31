@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/router'
 import { useMutation, gql } from '@apollo/client';
 
+import { FEED_QUERY, FeedType } from '../LinkList';
+import { LINKS_PER_PAGE } from '../../services/constants';
+
 const CREATE_LINK_MUTATION = gql`
   mutation PostMutation(
     $description: String!
@@ -30,10 +33,42 @@ export function CreateLink() {
       description: formState.description,
       url: formState.url
     },
+    update: (cache, { data: { post } }) => {
+      const take = LINKS_PER_PAGE;
+      const skip = 0;
+      const orderBy = { createdAt: 'desc' };
+
+      const response = cache.readQuery<FeedType>({
+        query: FEED_QUERY,
+        variables: {
+          take,
+          skip,
+          orderBy
+        }
+      });
+
+      if (response?.feed) {
+        const { feed } = response;
+
+        cache.writeQuery({
+          query: FEED_QUERY,
+          data: {
+            feed: {
+              links: [post, ...feed.links]
+            }
+          },
+          variables: {
+            take,
+            skip,
+            orderBy
+          }
+        });
+      }
+    },
     onCompleted: () => {
       setFormState(defaultFormState);
       router.push('/');
-    }
+    },
   });
 
   return (
