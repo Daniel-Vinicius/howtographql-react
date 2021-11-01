@@ -27,12 +27,6 @@ export function Header() {
           </a>
         </Link>
         <div className="ml1">|</div>
-        <Link href="/top">
-          <a className="ml1 no-underline black">
-            Top
-          </a>
-        </Link>
-        <div className="ml1">|</div>
         <Link href="/search">
           <a className="ml1 no-underline black">
             Search
